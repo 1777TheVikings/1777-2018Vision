@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>1777 - jetson calibration</title>
+	<meta charset="UTF-8">
+	<meta name="author" content="Team 1777 Vikings">
+<style>
+input[type=range] { width: 400px; }
+</style>
+<script>
+function submitData() {
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = function() {
+		if (this.readyState == 4 && this.status == 200) {
+			if (this.responseText == "good") {
+				document.getElementById("response").innerHTML = "Values updated";
+			}
+			else {
+				console.log("Response text: " + this.responseText);
+				document.getElementById("response").innerHTML = "Value update failed; check console for details";
+			}
+		}
+	};
+	
+	var data_to_send = {cam_brightness: document.getElementById("cam_brightness").value,
+			    cam_contrast: document.getElementById("cam_contrast").value,
+			    cam_saturation: document.getElementById("cam_saturation").value,
+			    cam_gain: document.getElementById("cam_gain").value,
+			    cam_sharpness: document.getElementById("cam_sharpness").value,
+			    cam_exposure_auto: document.getElementById("cam_exposure_auto").options[document.getElementById("cam_exposure_auto").selectedIndex].value,
+			    cam_exposure_absolute: document.getElementById("cam_exposure_absolute").value,
+			    hue: [document.getElementById("hue_min").value, document.getElementById("hue_max").value],
+			    saturation: [document.getElementById("saturation_min").value, document.getElementById("saturation_max").value],
+			    luminance: [document.getElementById("luminance_min").value, document.getElementById("luminance_max").value],
+			    height: [document.getElementById("height_min").value, document.getElementById("height_max").value],
+			    width: [document.getElementById("width_min").value, document.getElementById("width_max").value],
+			    area: [document.getElementById("area_min").value, document.getElementById("area_max").value]}
+	
+	xhttp.open("POST", "recv", true);
+	xhttp.send(JSON.stringify(data_to_send));
+}
+</script>
+</head>
+<body>
+<form>
+<h2>Camera Settings</h2>
+Brightness: <input id="cam_brightness" type="range" min="0" max="255" value="128" oninput="cam_brightness_out.value = this.value"> <output id="cam_brightness_out">128</output>
+<br/>
+Contrast: <input id="cam_contrast" type="range" min="0" max="255" value="32" oninput="cam_contrast_out.value = this.value"> <output id="cam_contrast_out">32</output>
+</br>
+Saturation: <input id="cam_saturation" type="range" min="0" max="255" value="32" oninput="cam_saturation_out.value = this.value"> <output id="cam_saturation_out">32</output>
+<br/>
+Gain: <input id="cam_gain" type="range" min="0" max="255" value="131" oninput="cam_gain_out.value = this.value"> <output id="cam_gain_out">131</output>
+<br/>
+Sharpness: <input id="cam_sharpness" type="range" min="0" max="255" value="24" oninput="cam_sharpness_out.value = this.value"> <output id="cam_sharpness_out">24</output>
+<br/>
+Exposure mode: <select id="cam_exposure_auto">
+	<option value="0">Aperture Priority Mode</option>
+	<option value="1" selected="selected">Manual Mode</option>
+</select>
+<br/>
+Exposure absolute value: <input id="cam_exposure_absolute" type="range" min="0" max="100" value="15" oninput="cam_exposure_absolute_out.value = this.value"> <output id="cam_exposure_absolute_out">15</output>
+<br/><br/><br/>
+<h2>Vision Processing</h2>
+Hue min: <input id="hue_min" type="range" min="0" max="180" value="25" oninput="hue_min_out.value = this.value"> <output id="hue_min_out">25</output>
+<br/>
+Hue max: <input id="hue_max" type="range" min="0" max="180" value="60" oninput="hue_max_out.value = this.value"> <output id="hue_max_out">60</output>
+<br/><br/>
+Saturation min: <input id="saturation_min" type="range" min="0" max="255" step="5" value="90" oninput="saturation_min_out.value = this.value"> <output id="saturation_min_out">90</output>
+<br/>
+Saturation max: <input id="saturation_max" type="range" min="0" max="255" step="5" value="250" oninput="saturation_max_out.value = this.value"> <output id="saturation_max_out">254</output>
+<br/><br/>
+Luminance min: <input id="luminance_min" type="range" min="0" max="255" step="5" value="25" oninput="luminance_min_out.value = this.value"> <output id="luminance_min_out">25</output>
+<br/>
+Luminance max: <input id="luminance_max" type="range" min="0" max="255" step="5" value="250" oninput="luminance_max_out.value = this.value"> <output id="luminance_max_out">250</output>
+<br/><br/>
+Height min: <input id="height_min" type="range" min="0" max="479" step="10" value="200" oninput="height_min_out.value = this.value"> <output id="height_min_out">200</output>
+<br/>
+Height max: <input id="height_max" type="range" min="1" max="480" step="10" value="400" oninput="height_max_out.value = this.value"> <output id="height_max_out">400</output>
+<br/><br/>
+Width min: <input id="width_min" type="range" min="0" max="639" step="10" value="200" oninput="width_min_out.value = this.value"> <output id="width_min_out">200</output>
+<br/>
+Width max: <input id="width_max" type="range" min="1" max="640" step="10" value="400" oninput="width_max_out.value = this.value"> <output id="width_max_out">400</output>
+<br/><br/>
+Area min: <input id="area_min" type="range" min="0" max="49900" step="100" value="2000" oninput="area_min_out.value = this.value"> <output id="area_min_out">2000</output>
+<br/>
+Area max: <input id="area_max" type="range" min="100" max="50000" step="100" value="10000" oninput="area_max_out.value = this.value"> <output id="area_max_out">10000</output>
+<br/><br/><br/>
+<button type="button" onclick="submitData()">Submit</button>
+<div id="response"></div>
+</form>
+</body>
+</html>
