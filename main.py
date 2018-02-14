@@ -61,7 +61,7 @@ def main():
 	if NT_OUTPUT:
 		print "connecting to networktables"
 		nt.initialize(server=c.NT_IP)
-		sd = NetworkTables.getTable("SmartDashboard")
+		sd = nt.getTable("SmartDashboard")
 	
 	cap = open_camera()
 	processing.load_settings(c.SETTINGS_FILE)	
