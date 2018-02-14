@@ -39,6 +39,7 @@ class GracefulKiller:
 		signal.signal(signal.SIGTERM, self.exit_gracefully)
 	
 	def exit_gracefully(self, signum, frame):
+		print "suicide is bad, mk?"
 		self.kill_now = True
 
 
@@ -91,6 +92,9 @@ def main():
 	cs.control_led(cs.led_preset.solid)
 	print "starting..."
 	
+	# initialize NT variables bc Shuffleboard gets angery if we don't
+	sd.putBoolean("vision_angle", 999)  # this will never be legitimately returned
+	sd.putBoolean("vision_shutdown", False)
 	rval = True
 	
 	try:
@@ -114,6 +118,8 @@ def main():
 			
 			if NT_OUTPUT:
 				sd.putNumber('vision_angle', data[0].angle)
+				if sd.getBoolean("vision_shutdown", False):
+					raise KeyboardInterrupt
 			
 			if RECORD:
 				vu.start_time("recording")
@@ -133,6 +139,7 @@ def main():
 	finally:
 		record.release()
 		cap.release()
+		nt.shutdown()
 		if STREAM:
 			server.stop()
 		cs.control_led(cs.led_preset.off)
