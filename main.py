@@ -60,7 +60,7 @@ def main():
 	# we should set this up first to minimize startup time.
 	if NT_OUTPUT:
 		print "connecting to networktables"
-		nt.initialize(server=NT_IP)
+		nt.initialize(server=c.NT_IP)
 		sd = NetworkTables.getTable("SmartDashboard")
 	
 	cap = open_camera()
