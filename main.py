@@ -1,6 +1,7 @@
 import cv2
 import time
 import threading
+import signal
 from Queue import Queue, Full
 from networktables import NetworkTables as nt
 
@@ -30,6 +31,17 @@ NT_OUTPUT = False
 WINDOW = False
 
 
+# found at https://stackoverflow.com/questions/18499497/how-to-process-sigterm-signal-gracefully
+class GracefulKiller:
+	kill_now = False
+	def __init__(self):
+		signal.signal(signal.SIGINT, self.exit_gracefully)
+		signal.signal(signal.SIGTERM, self.exit_gracefully)
+	
+	def exit_gracefully(self, signum, frame):
+		self.kill_now = True
+
+
 def open_camera():
 	cap = cv2.VideoCapture(0)
 	cap.set(3, c.CAMERA_RESOLUTION[0])
@@ -41,6 +53,8 @@ def open_camera():
 
 
 def main():
+	killer = GracefulKiller()
+	
 	cs.control_led(cs.led_preset.slow_blink)
 	# NetworkTables connections appear to be async, so
 	# we should set this up first to minimize startup time.
@@ -81,6 +95,9 @@ def main():
 	
 	try:
 		while rval:
+			if killer.kill_now:
+				raise KeyboardInterrupt
+			
 			if c.RELOAD_CAMERA:
 				print "reloading camera..."
 				cap.release()
