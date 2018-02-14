@@ -17,7 +17,7 @@ done
 echo "camera found"
 
 echo "waiting for SD card..."
-while [ ! -d "/media/nvidia/My Files" ]
+while [ ! -e "/media/nvidia/My Files/vision_settings.json" ]
 do
 	echo "..."
 	sleep 1
