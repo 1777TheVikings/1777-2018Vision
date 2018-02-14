@@ -81,10 +81,10 @@ def main():
 		server.start()
 		
 	if NT_OUTPUT:
-		if not sd.isConnected():
+		if not nt.isConnected():
 			cs.control_led(cs.led_preset.fast_blink)
 			print "waiting for networktables..."
-			while not sd.isConnected():
+			while not nt.isConnected():
 				time.sleep(100)  # prevents flooding the CPU
 		print "networktables ready"
 	
