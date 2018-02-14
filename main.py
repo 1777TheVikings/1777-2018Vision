@@ -23,7 +23,7 @@ RECORD = True
 ANNOTATE = True
 
 # Connect to NetworkTables and stream data to there.
-NT_OUTPUT = False
+NT_OUTPUT = True
 
 # Display a window with the stream output. Disable at
 # competition to increase framerate, since graphical
