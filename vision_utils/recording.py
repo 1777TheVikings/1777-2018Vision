@@ -13,5 +13,5 @@ import constants as c
 """
 def generateFilename():
 	dir = c.RECORD_LOCATION
-	fileName = datetime.datetime.now().strftime("%y-%m-%d-%H-%M-%S") + ".avi"
+	fileName = datetime.datetime.utcnow().strftime("%y-%m-%d-%H-%M-%S") + ".avi"
 	return os.path.join(dir, fileName)
