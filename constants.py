@@ -5,6 +5,15 @@ import os  # used for reading environment variables
 # Current value is set for Microsoft Lifecam HD-3000.
 FOV = 60.0
 
+# ID of the camera. Override this using the environment
+# variable VISION_CAMERA_ID when not using the Jetson,
+# or when using a device with multiple cameras.
+try:
+	CAMERA_ID = os.environ["VISION_CAMERA_ID"]
+	priint "Camera ID manually set to " + CAMERA_ID
+except KeyError:
+	CAMERA_ID = 0
+
 # Resolution of the camera, set as (width, height)
 CAMERA_RESOLUTION = (640.0, 480.0)
 

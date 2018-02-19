@@ -44,7 +44,7 @@ class GracefulKiller:
 
 
 def open_camera():
-	cap = cv2.VideoCapture(0)
+	cap = cv2.VideoCapture(c.CAMERA_ID)
 	cap.set(3, c.CAMERA_RESOLUTION[0])
 	cap.set(4, c.CAMERA_RESOLUTION[1])
 	cap.set(5, c.CAMERA_FPS)
