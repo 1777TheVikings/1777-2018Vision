@@ -10,7 +10,7 @@ FOV = 60.0
 # or when using a device with multiple cameras.
 try:
 	CAMERA_ID = os.environ["VISION_CAMERA_ID"]
-	priint "Camera ID manually set to " + CAMERA_ID
+	print "Camera ID manually set to " + CAMERA_ID
 except KeyError:
 	CAMERA_ID = 0
 
