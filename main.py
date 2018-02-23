@@ -23,7 +23,7 @@ RECORD = True
 ANNOTATE = True
 
 # Connect to NetworkTables and stream data to there.
-NT_OUTPUT = True
+NT_OUTPUT = False
 
 # Display a window with the stream output. Disable at
 # competition to increase framerate, since graphical
@@ -88,13 +88,13 @@ def main():
 			while not nt.isConnected():
 				time.sleep(100)  # prevents flooding the CPU
 		print "networktables ready"
+		# initialize NT variables bc Shuffleboard gets angery if we don't
+		sd.putBoolean("vision_angle", 999)  # this will never be legitimately returned
+		sd.putBoolean("vision_shutdown", False)
 	
 	cs.control_led(cs.led_preset.solid)
 	print "starting..."
 	
-	# initialize NT variables bc Shuffleboard gets angery if we don't
-	sd.putBoolean("vision_angle", 999)  # this will never be legitimately returned
-	sd.putBoolean("vision_shutdown", False)
 	rval = True
 	
 	try:
