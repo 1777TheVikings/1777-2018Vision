@@ -35,7 +35,7 @@ try:
 	RECORD_LOCATION = os.environ["VISION_RECORD_LOCATION"]
 	print "Record location manually set to " + RECORD_LOCATION
 except KeyError:
-	RECORD_LOCATION = "/media/nvidia/My Files/Recordings"
+	RECORD_LOCATION = "/media/nvidia/Files/Recordings"
 
 # Location of the vision processing settings file.
 # Override this using the environment variable
@@ -45,7 +45,7 @@ try:
 	SETTINGS_FILE = os.environ["VISION_SETTINGS_FILE"]
 	print "Settings file location manually set to " + SETTINGS_FILE
 except KeyError:
-	SETTINGS_FILE = "/media/nvidia/My Files/vision_settings.json"
+	SETTINGS_FILE = "/media/nvidia/Files/vision_settings.json"
 
 # Vision processing info (shouldn't be manually set)
 VISION_SETTINGS = {}
