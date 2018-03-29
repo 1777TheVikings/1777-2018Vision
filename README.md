@@ -47,7 +47,3 @@ The official FRC competitions provide a 30 minute window for vision processing c
 6. Once done, eject the SD card and put it into your Jetson.
 
 Voila! Instead of bringing your entire robot out to the field for calibration, a laptop with a USB webcam will suffice. This makes it much quicker to calibrate and allows your build team to perform last-minute changes to the robot without interruption.
-
----
-
-Created by Colby Gallup
