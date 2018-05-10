@@ -9,7 +9,7 @@ Your Jetson (or other coprocessing SoC of choice) should be configured to run `m
 
 While this code is intended for use on the NVIDIA Jetson TX1 using a Logitech C920 webcam, any coprocessing SoC (e.g. Raspberry Pi, Tinkerboard) with a V4L2-compliant webcam will work. If using a Jetson, an SD card is strongly recommended for storing recordings and camera/pipeline settings.
 
-This code should run using Python 2.7.* with OpenCV 3.* bindings. (The pip libraries use OpenCV 2.4, so you must compile OpenCV from source to run this code without modifications.) Beyond that, the following packages must be installed:
+This code should run using Python 2.7.* with OpenCV 3.* bindings. (The pip libraries use OpenCV 2.4, so you must compile OpenCV from source to run this code without modifications.) We strongly recommend building OpenCV with the libjpeg-turbo library to make the streaming as fast as possible. Beyond that, the following packages must be installed:
 
 - pynetworktables
 - Jinja2
