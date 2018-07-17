@@ -5,6 +5,7 @@ import signal
 import importlib
 from queue import Queue, Full
 from networktables import NetworkTables as nt
+from typing import Any, NoReturn
 
 import constants as c
 import camera_settings as cs
@@ -18,12 +19,12 @@ class GracefulKiller:
 		signal.signal(signal.SIGINT, self.exit_gracefully)
 		signal.signal(signal.SIGTERM, self.exit_gracefully)
 	
-	def exit_gracefully(self, signum, frame):
+	def exit_gracefully(self, signum: int, frame: Any) -> NoReturn:  # I don't know the type to use for the stack frame
 		print("suicide is bad, mk?")
 		self.kill_now = True
 
 
-def open_camera():
+def open_camera() -> cv2.VideoCapture:
 	cap = cv2.VideoCapture(c.CAMERA_ID)
 	cap.set(3, c.CAMERA_RESOLUTION[0])
 	cap.set(4, c.CAMERA_RESOLUTION[1])
@@ -33,7 +34,7 @@ def open_camera():
 	return cap
 
 
-def main():
+def main() -> NoReturn:
 	killer = GracefulKiller()
 	
 	cs.control_led(cs.led_preset.slow_blink)

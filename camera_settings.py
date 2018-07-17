@@ -1,18 +1,19 @@
 import os
 import json
 from enum import Enum
+from typing import NoReturn
 
 import constants as c
 
 
-def set(setting, value):
+def set(setting: str, value: str) -> NoReturn:
 	os.system("v4l2-ctl -w -c " + setting + "=" + value)
 
 
 led_preset = Enum("led_preset", "off solid slow_blink fast_blink")
 
 
-def control_led(preset):
+def control_led(preset: str) -> NoReturn:
 	if preset == led_preset.off:
 		set("led1_mode", "0")
 	elif preset == led_preset.solid:
@@ -25,7 +26,7 @@ def control_led(preset):
 		set("led1_frequency", "70")
 
 
-def apply_settings():
+def apply_settings() -> NoReturn:
 	for k in sorted(c.VISION_SETTINGS.keys(), reverse=True):
 		if k[:4] == "cam_":
 			set(k[4:], c.VISION_SETTINGS[k])
@@ -40,7 +41,7 @@ def apply_settings():
 	
 	Does not return a value.
 """
-def load_settings(file_name, force_reload=True):
+def load_settings(file_name: str, force_reload: bool = True) -> NoReturn:
 	f = open(file_name, "r")
 	data = json.load(f)
 	f.close()
@@ -59,7 +60,7 @@ def load_settings(file_name, force_reload=True):
 	
 	Does not return a value.
 """
-def save_settings(file_name, reload=True):
+def save_settings(file_name: str, reload: bool = True) -> NoReturn:
 	f = open(file_name, "w")
 	json.dump(c.VISION_SETTINGS, f)
 	f.close()

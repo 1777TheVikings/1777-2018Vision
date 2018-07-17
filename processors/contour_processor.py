@@ -3,6 +3,7 @@ import os
 import json
 from math import sqrt
 from numpy import ndarray  # only imported for type checking
+from typing import Tuple, List
 
 import constants as c
 import camera_settings as cs
@@ -25,7 +26,7 @@ class Processor(ProcessorBase):
 		with annotation). If annotation is not requested, the output
 		frame is the masked/blurred/denoised image.
 	"""
-	def process(self, frame: ndarray, **kwargs):
+	def process(self, frame: ndarray, **kwargs) -> Tuple[List[ndarray], ndarray]:
 		
 		vu.start_time('blur')
 		blurred = cv2.blur(frame, (15, 15))
@@ -77,7 +78,7 @@ class Processor(ProcessorBase):
 		
 		Returns all valid contours as a list of numpy.ndarray.
 	"""
-	def filter_contours(self, contours):
+	def filter_contours(self, contours: ndarray) -> ndarray:
 		if type(contours) is not list:
 			raise ValueError("'contours' should be a list; input is of type " + str(type(contours)))
 		

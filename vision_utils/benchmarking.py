@@ -1,29 +1,30 @@
 import cv2
 import collections
+from typing import NoReturn
 
 exec_times = collections.defaultdict(lambda: [0, 0])
 timers_in_progress = {}
 
 
-def add_to_execution_times(type, time):
+def add_to_execution_times(type: str, time: float) -> NoReturn:
     global exec_times
     new_time_total = (exec_times[type][1] * exec_times[type][0]) + time
     exec_times[type][0] += 1
     exec_times[type][1] = new_time_total / exec_times[type][0]
 
 
-def start_time(type):
+def start_time(type: str) -> NoReturn:
     global timers_in_progress
     timers_in_progress[type] = cv2.getTickCount()
 
 
-def end_time(type):
+def end_time(type: str) -> NoReturn:
     end = cv2.getTickCount()
     add_to_execution_times(type,
                            (end - timers_in_progress[type]) / cv2.getTickFrequency())
 
 
-def report():
+def report() -> NoReturn:
     total_time = 0
     for i in exec_times.values():
         total_time += i[1]

@@ -1,16 +1,19 @@
 import cv2
 from math import sqrt
+from numpy import ndarray  # used for type checking
+from typing import NoReturn, List
 import sys
 sys.path.append('..')
+
 from constants import *
 
 
 class ContourInfo(object):
-	def __init__(self, contour):
+	def __init__(self, contour: ndarray):
 		self.contour = contour
 		self.calc_angle()
 	
-	def calc_angle(self):
+	def calc_angle(self) -> NoReturn:
 		moments = cv2.moments(self.contour)
 		self.x = int(moments['m10'] / moments['m00'])
 		self.y = int(moments['m01'] / moments['m00'])
@@ -22,7 +25,7 @@ class ContourInfo(object):
 			self.angle = -1 * (DEGREES_PER_PIXEL * (self.x - 320))
 
 
-def _get_contour_dist_from_center(contour):
+def _get_contour_dist_from_center(contour: ContourInfo) -> float:
 	coords = (contour.x, contour.y)
 	center = (CAMERA_RESOLUTION[0] / 2, CAMERA_RESOLUTION[1] / 2)
 	
@@ -38,7 +41,7 @@ def _get_contour_dist_from_center(contour):
 	
 	Returns a list of ContourInfo objects.
 """
-def process_contours(contours):
+def process_contours(contours: ndarray) -> List[ContourInfo]:
 	output = []
 	for c in contours:
 		output.append(ContourInfo(c))

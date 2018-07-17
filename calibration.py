@@ -1,4 +1,5 @@
 import cv2
+from typing import NoReturn
 
 import constants as c
 import vision_utils as vu
@@ -7,7 +8,7 @@ import calibration_server
 from contour_processor import ContourProcessor
 
 
-def open_camera():
+def open_camera() -> cv2.VideoCapture:
 	cap = cv2.VideoCapture(c.CAMERA_ID)
 	cap.set(3, c.CAMERA_RESOLUTION[0])
 	cap.set(4, c.CAMERA_RESOLUTION[1])
@@ -17,7 +18,7 @@ def open_camera():
 	return cap
 
 
-def main():	
+def main() -> NoReturn:	
 	cs.load_settings(c.SETTINGS_FILE)
 	cs.apply_settings()
 	

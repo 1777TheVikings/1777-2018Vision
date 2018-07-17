@@ -1,5 +1,6 @@
 import cv2
 import networktables as nt
+from typing import NoReturn
 
 from constants import *
 import vision_utils as vu
@@ -13,7 +14,7 @@ STREAM = False
 ANNOTATE = True
 
 
-def main():
+def main() -> NoReturn:
 	cap = cv2.VideoCapture("../test_samples/test_video.mp4")
 	
 	rval, _ = cap.read()

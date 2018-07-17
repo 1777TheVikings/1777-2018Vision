@@ -11,7 +11,7 @@ import constants as c
 	Returns a string specifying the absolute path to
 	record a video to.
 """
-def generateFilename():
+def generateFilename() -> str:
 	dir = c.RECORD_LOCATION
 	fileName = datetime.datetime.utcnow().strftime("%y-%m-%d-%H-%M-%S") + ".avi"
 	return os.path.join(dir, fileName)
