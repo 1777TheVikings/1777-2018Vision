@@ -5,6 +5,7 @@ from bottle import run as run_server
 
 import processing
 import constants as c
+import camera_settings as cs
 from vision_utils import WSGIRefServerStoppable
 
 
@@ -33,5 +34,5 @@ class CalibrationServer(threading.Thread):
 	def receive_data():
 		resp = json.loads(request.body.read())
 		c.VISION_SETTINGS = resp
-		processing.save_settings(c.SETTINGS_FILE)
+		cs.save_settings(c.SETTINGS_FILE)
 		return("good")

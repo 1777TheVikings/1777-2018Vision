@@ -45,7 +45,7 @@ def main():
 		sd = nt.getTable("SmartDashboard")
 	
 	cap = open_camera()
-	processing.load_settings(c.SETTINGS_FILE)	
+	cs.load_settings(c.SETTINGS_FILE)	
 	
 	if RECORD:
 		print("starting recording...")
