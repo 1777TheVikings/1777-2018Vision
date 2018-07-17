@@ -93,9 +93,7 @@ def main() -> NoReturn:
                 cap.release()
                 cap = open_camera()
                 c.RELOAD_CAMERA = False
-            vu.start_time('reading')
             rval, frame = cap.read()
-            vu.end_time('reading')
             data, processed_frame = processor.process(frame, annotate=c.ANNOTATE)
 
             if c.WINDOW:
@@ -108,22 +106,17 @@ def main() -> NoReturn:
                     raise KeyboardInterrupt
 
             if c.RECORD:
-                vu.start_time("recording")
                 # noinspection PyUnboundLocalVariable
                 record.write(processed_frame)
-                vu.end_time("recording")
 
             if c.STREAM:
-                vu.start_time("streaming")
                 try:
                     # noinspection PyUnboundLocalVariable
                     server_queue.put(cv2.imencode(".jpg", processed_frame)[1].tostring(), False)
                 except Full:
                     pass
-                vu.end_time("streaming")
     except KeyboardInterrupt:
         print("wrapping up!")
-        vu.report()
     finally:
         record.release()
         cap.release()
