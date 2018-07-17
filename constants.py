@@ -1,6 +1,5 @@
 import os  # used for reading environment variables
 
-
 # Generate an MJPG stream that emulates an Axis Camera.
 STREAM = True
 
@@ -24,7 +23,6 @@ WINDOW = True
 # the folder "processors".
 PROCESSOR = "contour_processor"
 
-
 # Horizontal field of view of the camera in degrees.
 # Current value is set for Microsoft Lifecam HD-3000.
 FOV = 60.0
@@ -33,10 +31,10 @@ FOV = 60.0
 # variable VISION_CAMERA_ID when not using the Jetson,
 # or when using a device with multiple cameras.
 try:
-	CAMERA_ID = os.environ["VISION_CAMERA_ID"]
-	print("Camera ID manually set to {}".format(CAMERA_ID))
+    CAMERA_ID = os.environ["VISION_CAMERA_ID"]
+    print("Camera ID manually set to {}".format(CAMERA_ID))
 except KeyError:
-	CAMERA_ID = 0
+    CAMERA_ID = 0
 
 # Resolution of the camera, set as (width, height)
 CAMERA_RESOLUTION = (640.0, 480.0)
@@ -56,20 +54,20 @@ NT_IP = "roboRIO-1777-FRC.local"
 # not using the Jetson (e.g. when calibrating or
 # recording testing vids on a laptop).
 try:
-	RECORD_LOCATION = os.environ["VISION_RECORD_LOCATION"]
-	print("Record location manually set to {}".format(RECORD_LOCATION))
+    RECORD_LOCATION = os.environ["VISION_RECORD_LOCATION"]
+    print("Record location manually set to {}".format(RECORD_LOCATION))
 except KeyError:
-	RECORD_LOCATION = "/media/nvidia/Files/Recordings"
+    RECORD_LOCATION = "/media/nvidia/Files/Recordings"
 
 # Location of the vision processing settings file.
 # Override this using the environment variable
 # VISION_SETTINGS_FILE when not using the Jetson
 # (e.g. when calibrating on a laptop).
 try:
-	SETTINGS_FILE = os.environ["VISION_SETTINGS_FILE"]
-	print("Settings file location manually set to {}".format(SETTINGS_FILE))
+    SETTINGS_FILE = os.environ["VISION_SETTINGS_FILE"]
+    print("Settings file location manually set to {}".format(SETTINGS_FILE))
 except KeyError:
-	SETTINGS_FILE = "/media/nvidia/Files/vision_settings.json"
+    SETTINGS_FILE = "/media/nvidia/Files/vision_settings.json"
 
 # Vision processing info (shouldn't be manually set)
 VISION_SETTINGS = {}
