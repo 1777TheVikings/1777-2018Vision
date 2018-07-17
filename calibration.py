@@ -3,8 +3,8 @@ import cv2
 import constants as c
 import vision_utils as vu
 import camera_settings as cs
-import processing
 import calibration_server
+from contour_processor import ContourProcessor
 
 
 def open_camera():
@@ -18,7 +18,7 @@ def open_camera():
 
 
 def main():	
-	processing.load_settings(c.SETTINGS_FILE)
+	cs.load_settings(c.SETTINGS_FILE)
 	cs.apply_settings()
 	
 	cap = open_camera()
@@ -28,6 +28,7 @@ def main():
 		
 	rval = True
 	
+	processor = ContourProcessor()
 	print("starting...")
 	
 	try:
@@ -40,7 +41,7 @@ def main():
 			vu.start_time('reading')
 			rval, frame = cap.read()
 			vu.end_time('reading')
-			data, processed_frame = processing.process(frame, True)
+			data, processed_frame = processor.process(frame, annotate=True)
 			
 			cv2.imshow('k', processed_frame)
 			cv2.waitKey(1)

@@ -8,7 +8,7 @@ from networktables import NetworkTables as nt
 import constants as c
 import camera_settings as cs
 import vision_utils as vu
-import processing
+from contour_processor import ContourProcessor
 
 
 # found at https://stackoverflow.com/questions/18499497/how-to-process-sigterm-signal-gracefully
@@ -39,7 +39,7 @@ def main():
 	cs.control_led(cs.led_preset.slow_blink)
 	# NetworkTables connections appear to be async, so
 	# we should set this up first to minimize startup time.
-	if NT_OUTPUT:
+	if c.NT_OUTPUT:
 		print("connecting to networktables")
 		nt.initialize(server=c.NT_IP)
 		sd = nt.getTable("SmartDashboard")
@@ -47,7 +47,7 @@ def main():
 	cap = open_camera()
 	cs.load_settings(c.SETTINGS_FILE)	
 	
-	if RECORD:
+	if c.RECORD:
 		print("starting recording...")
 		record = cv2.VideoWriter(vu.generateFilename(),
 					 cv2.VideoWriter_fourcc(*"MJPG"),
@@ -55,13 +55,13 @@ def main():
 					 (int(c.CAMERA_RESOLUTION[0]),
 					  int(c.CAMERA_RESOLUTION[1])))
 	
-	if STREAM:
+	if c.STREAM:
 		print("starting video stream...")
 		server_queue = Queue(maxsize=2)
 		server = vu.MJPGserver(server_queue)
 		server.start()
 		
-	if NT_OUTPUT:
+	if c.NT_OUTPUT:
 		if not nt.isConnected():
 			cs.control_led(cs.led_preset.fast_blink)
 			print("waiting for networktables...")
@@ -72,7 +72,9 @@ def main():
 		sd.putBoolean("vision_angle", 999)  # this will never be legitimately returned
 		sd.putBoolean("vision_shutdown", False)
 	
+	
 	cs.control_led(cs.led_preset.solid)
+	processor = ContourProcessor()
 	print("starting...")
 	
 	rval = True
@@ -90,23 +92,23 @@ def main():
 			vu.start_time('reading')
 			rval, frame = cap.read()
 			vu.end_time('reading')
-			data, processed_frame = processing.process(frame, ANNOTATE)
+			data, processed_frame = processor.process(frame, annotate=c.ANNOTATE)
 			
-			if WINDOW:
+			if c.WINDOW:
 				cv2.imshow('k', processed_frame)
 				cv2.waitKey(1)
 			
-			if NT_OUTPUT:
+			if c.NT_OUTPUT:
 				sd.putNumber('vision_angle', data[0].angle)
 				if sd.getBoolean("vision_shutdown", False):
 					raise KeyboardInterrupt
 			
-			if RECORD:
+			if c.RECORD:
 				vu.start_time("recording")
 				record.write(processed_frame)
 				vu.end_time("recording")
 			
-			if STREAM:
+			if c.STREAM:
 				vu.start_time("streaming")
 				try:
 					server_queue.put(cv2.imencode(".jpg", processed_frame)[1].tostring(), False)
@@ -120,7 +122,7 @@ def main():
 		record.release()
 		cap.release()
 		nt.shutdown()
-		if STREAM:
+		if c.STREAM:
 			server.stop()
 		cs.control_led(cs.led_preset.off)
 
