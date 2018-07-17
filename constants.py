@@ -1,6 +1,24 @@
 import os  # used for reading environment variables
 
 
+# Generate an MJPG stream that emulates an Axis Camera.
+STREAM = True
+
+# Record all videos.
+RECORD = True
+
+# Annotate the stream with vision processing info
+ANNOTATE = True
+
+# Connect to NetworkTables and stream data to there.
+NT_OUTPUT = False
+
+# Display a window with the stream output. Disable at
+# competition to increase framerate, since graphical
+# output requires delays (cv2.waitKey).
+WINDOW = True
+
+
 # Horizontal field of view of the camera in degrees.
 # Current value is set for Microsoft Lifecam HD-3000.
 FOV = 60.0

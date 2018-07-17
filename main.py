@@ -11,26 +11,6 @@ import vision_utils as vu
 import processing
 
 
-# TODO: Move these configs to constants.py
-
-# Generate an MJPG stream that emulates an Axis Camera.
-STREAM = True
-
-# Record all videos.
-RECORD = True
-
-# Annotate the stream with vision processing info
-ANNOTATE = True
-
-# Connect to NetworkTables and stream data to there.
-NT_OUTPUT = False
-
-# Display a window with the stream output. Disable at
-# competition to increase framerate, since graphical
-# output requires delays (cv2.waitKey).
-WINDOW = True
-
-
 # found at https://stackoverflow.com/questions/18499497/how-to-process-sigterm-signal-gracefully
 class GracefulKiller:
 	kill_now = False
