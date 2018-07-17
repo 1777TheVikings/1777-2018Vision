@@ -1,6 +1,6 @@
 # FRC Team 1777 Vision Code
 
-This is team #1777 Viking's vision processing code for the 2018 Power Up game. This code is intended to be run on a NVIDIA Jetson TX1 using a Logitech C270 webcam for video input; however, any computer with a V4L2-compliant webcam should work for testing. This code uses OpenCV 3.4.0 and Python 2.7.12 (should work on any 2.7 subversion).
+This is team #1777 Viking's vision processing code for the 2018 Power Up game. This code is intended to be run on a NVIDIA Jetson TX1 using a Logitech C270 webcam for video input; however, any computer with a V4L2-compliant webcam should work for testing. This code uses OpenCV 3.4.0 and Python 3.6.6 (should work on any 3.6.X subversion).
 
 Your Jetson (or other coprocessing SoC of choice) should be configured to run `main.py` on startup. See `scripts/startup_script.sh` for an example. `calibration.py` is a trimmed-down version of that code, with an added web server serving an easy-to-use calibration tool. This tool allows teams to quickly change the camera/pipeline settings during testing (or on the field; see [Calibration on a laptop](#calibration-on-a-laptop) below for more info).
 
