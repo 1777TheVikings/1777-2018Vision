@@ -6,22 +6,22 @@ exec_times = collections.defaultdict(lambda: [0, 0])
 timers_in_progress = {}
 
 
-def add_to_execution_times(type: str, time: float) -> NoReturn:
+def add_to_execution_times(timer_name: str, time: float) -> NoReturn:
     global exec_times
-    new_time_total = (exec_times[type][1] * exec_times[type][0]) + time
-    exec_times[type][0] += 1
-    exec_times[type][1] = new_time_total / exec_times[type][0]
+    new_time_total = (exec_times[timer_name][1] * exec_times[timer_name][0]) + time
+    exec_times[timer_name][0] += 1
+    exec_times[timer_name][1] = new_time_total / exec_times[timer_name][0]
 
 
-def start_time(type: str) -> NoReturn:
+def start_time(timer_name: str) -> NoReturn:
     global timers_in_progress
-    timers_in_progress[type] = cv2.getTickCount()
+    timers_in_progress[timer_name] = cv2.getTickCount()
 
 
-def end_time(type: str) -> NoReturn:
+def end_time(timer_name: str) -> NoReturn:
     end = cv2.getTickCount()
-    add_to_execution_times(type,
-                           (end - timers_in_progress[type]) / cv2.getTickFrequency())
+    add_to_execution_times(timer_name,
+                           (end - timers_in_progress[timer_name]) / cv2.getTickFrequency())
 
 
 def report() -> NoReturn:
