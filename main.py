@@ -2,7 +2,7 @@ import cv2
 import time
 import threading
 import signal
-from Queue import Queue, Full
+from queue import Queue, Full
 from networktables import NetworkTables as nt
 
 import constants as c
@@ -28,7 +28,7 @@ NT_OUTPUT = False
 # Display a window with the stream output. Disable at
 # competition to increase framerate, since graphical
 # output requires delays (cv2.waitKey).
-WINDOW = False
+WINDOW = True
 
 
 # found at https://stackoverflow.com/questions/18499497/how-to-process-sigterm-signal-gracefully
@@ -39,7 +39,7 @@ class GracefulKiller:
 		signal.signal(signal.SIGTERM, self.exit_gracefully)
 	
 	def exit_gracefully(self, signum, frame):
-		print "suicide is bad, mk?"
+		print("suicide is bad, mk?")
 		self.kill_now = True
 
 
@@ -60,7 +60,7 @@ def main():
 	# NetworkTables connections appear to be async, so
 	# we should set this up first to minimize startup time.
 	if NT_OUTPUT:
-		print "connecting to networktables"
+		print("connecting to networktables")
 		nt.initialize(server=c.NT_IP)
 		sd = nt.getTable("SmartDashboard")
 	
@@ -68,7 +68,7 @@ def main():
 	processing.load_settings(c.SETTINGS_FILE)	
 	
 	if RECORD:
-		print "starting recording..."
+		print("starting recording...")
 		record = cv2.VideoWriter(vu.generateFilename(),
 					 cv2.VideoWriter_fourcc(*"MJPG"),
 					 c.CAMERA_FPS,
@@ -76,7 +76,7 @@ def main():
 					  int(c.CAMERA_RESOLUTION[1])))
 	
 	if STREAM:
-		print "starting video stream..."
+		print("starting video stream...")
 		server_queue = Queue(maxsize=2)
 		server = vu.MJPGserver(server_queue)
 		server.start()
@@ -84,16 +84,16 @@ def main():
 	if NT_OUTPUT:
 		if not nt.isConnected():
 			cs.control_led(cs.led_preset.fast_blink)
-			print "waiting for networktables..."
+			print("waiting for networktables...")
 			while not nt.isConnected():
 				time.sleep(100)  # prevents flooding the CPU
-		print "networktables ready"
+		print("networktables ready")
 		# initialize NT variables bc Shuffleboard gets angery if we don't
 		sd.putBoolean("vision_angle", 999)  # this will never be legitimately returned
 		sd.putBoolean("vision_shutdown", False)
 	
 	cs.control_led(cs.led_preset.solid)
-	print "starting..."
+	print("starting...")
 	
 	rval = True
 	
@@ -103,7 +103,7 @@ def main():
 				raise KeyboardInterrupt
 			
 			if c.RELOAD_CAMERA:
-				print "reloading camera..."
+				print("reloading camera...")
 				cap.release()
 				cap = open_camera()
 				c.RELOAD_CAMERA = False
@@ -134,7 +134,7 @@ def main():
 					pass
 				vu.end_time("streaming")
 	except KeyboardInterrupt:
-		print "wrapping up!"
+		print("wrapping up!")
 		vu.report()
 	finally:
 		record.release()

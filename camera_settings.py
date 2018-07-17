@@ -25,6 +25,6 @@ def control_led(preset):
 
 
 def apply_settings():
-	for k in sorted(c.VISION_SETTINGS.iterkeys(), reverse=True):
+	for k in sorted(c.VISION_SETTINGS.keys(), reverse=True):
 		if k[:4] == "cam_":
 			set(k[4:], c.VISION_SETTINGS[k])

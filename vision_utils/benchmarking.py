@@ -32,13 +32,13 @@ def report():
     avg_fps_line = "Average frames per second: {} fps".format(str(1 / total_time))
     longest_type = max({i: len(i) for i in exec_times.keys()}.values())
     remaining_len = max(len(top_line), len(avg_fps_line)) - (longest_type + 3)
-    print top_line
-    print avg_fps_line
-    print "=" * len(top_line)
+    print(top_line)
+    print(avg_fps_line)
+    print("=" * len(top_line))
     for i in exec_times.keys():
         str_out = i.ljust(longest_type + 1) + "| "
         percent = exec_times[i][1] / total_time
         str_out += "#" * int(round((remaining_len - 6) * percent))
         last_len = remaining_len - int(round((remaining_len - 6) * percent))
         str_out += (" %.1f%%" % (percent * 100)).rjust(last_len)
-        print str_out
+        print(str_out)

@@ -21,7 +21,7 @@ def main():
 	
 	rval = True
 	
-	print "starting..."
+	print("starting...")
 	
 	try:
 		while rval:
@@ -35,7 +35,7 @@ def main():
 			cv2.imshow('k', processed_frame)
 			cv2.waitKey(1)
 	except KeyboardInterrupt:
-		print "wrapping up!"
+		print("wrapping up!")
 		vu.report()
 	finally:
 		cap.release()

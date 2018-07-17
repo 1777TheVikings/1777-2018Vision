@@ -10,7 +10,7 @@ FOV = 60.0
 # or when using a device with multiple cameras.
 try:
 	CAMERA_ID = os.environ["VISION_CAMERA_ID"]
-	print "Camera ID manually set to " + CAMERA_ID
+	print("Camera ID manually set to {}".format(CAMERA_ID))
 except KeyError:
 	CAMERA_ID = 0
 
@@ -33,7 +33,7 @@ NT_IP = "roboRIO-1777-FRC.local"
 # recording testing vids on a laptop).
 try:
 	RECORD_LOCATION = os.environ["VISION_RECORD_LOCATION"]
-	print "Record location manually set to " + RECORD_LOCATION
+	print("Record location manually set to {}".format(RECORD_LOCATION))
 except KeyError:
 	RECORD_LOCATION = "/media/nvidia/Files/Recordings"
 
@@ -43,7 +43,7 @@ except KeyError:
 # (e.g. when calibrating on a laptop).
 try:
 	SETTINGS_FILE = os.environ["VISION_SETTINGS_FILE"]
-	print "Settings file location manually set to " + SETTINGS_FILE
+	print("Settings file location manually set to {}".format(SETTINGS_FILE))
 except KeyError:
 	SETTINGS_FILE = "/media/nvidia/Files/vision_settings.json"
 

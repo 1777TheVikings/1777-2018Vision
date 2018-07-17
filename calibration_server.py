@@ -34,4 +34,4 @@ class CalibrationServer(threading.Thread):
 		resp = json.loads(request.body.read())
 		c.VISION_SETTINGS = resp
 		processing.save_settings(c.SETTINGS_FILE)
-		return "good"
+		return("good")

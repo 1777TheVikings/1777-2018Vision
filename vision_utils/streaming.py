@@ -1,6 +1,6 @@
 from bottle import get, response, ServerAdapter
 from bottle import run as run_server
-from Queue import Full, Empty
+from queue import Full, Empty
 import threading
 
 import sys
@@ -61,8 +61,9 @@ class WSGIRefServerStoppable(ServerAdapter):
 		from wsgiref.simple_server import make_server, WSGIRequestHandler
 		if self.quiet:
 			class QuietHandler(WSGIRequestHandler):
-				def log_request(*args, **kw): pass
-		    		self.options['handler_class'] = QuietHandler
+				def log_request(*args, **kw):
+					pass
+				self.options['handler_class'] = QuietHandler
 		self.server = make_server(self.host, self.port, handler, **self.options)
 		self.server.serve_forever()
 
