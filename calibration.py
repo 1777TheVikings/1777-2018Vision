@@ -2,7 +2,6 @@ import cv2
 from typing import NoReturn
 
 import constants as c
-import vision_utils as vu
 import camera_settings as cs
 import calibration_server
 from processors.contour_processor import Processor
@@ -40,16 +39,13 @@ def main() -> NoReturn:
                 cap.release()
                 cap = open_camera()
                 c.RELOAD_CAMERA = False
-            vu.start_time('reading')
             rval, frame = cap.read()
-            vu.end_time('reading')
             data, processed_frame = processor.process(frame, annotate=True)
             
             cv2.imshow('k', processed_frame)
             cv2.waitKey(1)
     except KeyboardInterrupt:
         print("wrapping up!")
-        vu.report()
     finally:
         server.stop()
         cap.release()

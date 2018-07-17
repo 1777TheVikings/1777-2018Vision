@@ -24,12 +24,8 @@ class Processor(ProcessorBase):
     """
     
     def process(self, frame: ndarray, **kwargs) -> Tuple[List[vu.ContourInfo], ndarray]:
-        
-        vu.start_time('blur')
         blurred = cv2.blur(frame, (15, 15))
-        vu.end_time('blur')
         
-        vu.start_time('hsl')
         hsl_filtered = cv2.inRange(cv2.cvtColor(blurred, cv2.COLOR_BGR2HLS),
                                    (int(c.VISION_SETTINGS['hue'][0]),
                                     int(c.VISION_SETTINGS['luminance'][0]),
@@ -37,15 +33,11 @@ class Processor(ProcessorBase):
                                    (int(c.VISION_SETTINGS['hue'][1]),
                                     int(c.VISION_SETTINGS['luminance'][1]),
                                     int(c.VISION_SETTINGS['saturation'][1])))
-        vu.end_time('hsl')
         
-        vu.start_time('denoise')
         eroded = cv2.erode(hsl_filtered, None, (-1, -1), iterations=5, borderType=cv2.BORDER_CONSTANT, borderValue=(-1))
         dilated = cv2.dilate(eroded, None, (-1, -1), iterations=5, borderType=cv2.BORDER_CONSTANT,
                              borderValue=(-1))
-        vu.end_time('denoise')
         
-        vu.start_time('contours')
         contour_image, contours, hierarchy = cv2.findContours(dilated, mode=cv2.RETR_EXTERNAL,
                                                               method=cv2.CHAIN_APPROX_SIMPLE)
         
@@ -55,7 +47,6 @@ class Processor(ProcessorBase):
         
         contours_filtered = self.filter_contours(contours_hulls)
         data_out = vu.process_contours(contours_filtered)
-        vu.end_time('contours')
         
         if "annotate" in kwargs and kwargs["annotate"]:
             output_frame = frame
