@@ -16,7 +16,6 @@ This code should run using Python 3.6.* with OpenCV 3.* bindings. (The pip libra
 - bottle
 - numpy
 
-
 ## Data outputs
 
 The relative angle to the nearest detected Power Cube (CCW is positive, similar to the Pigeon IMU) is sent to the NetworkTables index `vision_angle`. If multiple Cubes are detected, the one nearest to the center of the screen is used for the angle calculations.
@@ -25,11 +24,13 @@ The annotated output of the vision processing is, by default, streamed at `http:
 
 All video is recorded to the directory listed in `RECORD_LOCATION` of `constants.py`. This can be changed directly by editing the variable or by setting the `VISION_RECORD_LOCATION` environment variable (preferrable for testing on a separate computer). In our case, the value is preset to save videos to an SD card labelled "My Files".
 
+## Changing pipelines
+
+You can define your own vision processing pipelines by creating a new Python file in `processors`. All files in that folder must define a class `Processor(processor.ProcessorBase)`, fully implementing the abstract base class `ProcessorBase`. You can then easily swap between processors by selecting the desired file/module name in the `PROCESSOR` file of `constants.py`.
 
 ## Camera/pipeline settings
 
 Various settings for the camera and the vision processing pipeline can be found in `vision_settings.json`. The file path can be manually edited in `SETTINGS_FILE` of `constants.py` or with the environment variable `VISION_SETTINGS_FILE`. By default, the file path directs to a copy of the settings file on an SD card (the reason for this will be made clear later), not the file in this repository. Move the file and/or edit the path accordingly.
-
 
 ## Calibration
 
