@@ -88,5 +88,5 @@ class MJPGserver(threading.Thread):
     @staticmethod
     @get("/mjpg")
     def mjpeg() -> Iterable:
-        response.content_type = "multipart/x-mixed-replace;boundary=" + BOUNDARY
+        response.content_type = "multipart/x-mixed-replace;boundary={}".format(BOUNDARY)
         return iter(MJPGstream(FRAME_QUEUE, c.CAMERA_RESOLUTION[0], c.CAMERA_RESOLUTION[1]))

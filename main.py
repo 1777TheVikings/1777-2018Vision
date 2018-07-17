@@ -101,7 +101,8 @@ def main() -> NoReturn:
                 cv2.waitKey(1)
 
             if c.NT_OUTPUT:
-                sd.putNumber('vision_angle', data[0].angle)
+                if len(data) > 0:
+                    sd.putNumber('vision_angle', data[0].angle)
                 if sd.getBoolean("vision_shutdown", False):
                     raise KeyboardInterrupt
 
