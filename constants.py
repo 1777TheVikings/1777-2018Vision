@@ -18,6 +18,12 @@ NT_OUTPUT = False
 # output requires delays (cv2.waitKey).
 WINDOW = True
 
+# Uses the processing module specified in $PROCESSOR.py.
+# This uses dynamic module loading, so don't add a file
+# extension to this. Modules are searched for in
+# the folder "processors".
+PROCESSOR = "contour_processor"
+
 
 # Horizontal field of view of the camera in degrees.
 # Current value is set for Microsoft Lifecam HD-3000.

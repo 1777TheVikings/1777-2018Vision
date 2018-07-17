@@ -2,13 +2,13 @@ import cv2
 import time
 import threading
 import signal
+import importlib
 from queue import Queue, Full
 from networktables import NetworkTables as nt
 
 import constants as c
 import camera_settings as cs
 import vision_utils as vu
-from contour_processor import ContourProcessor
 
 
 # found at https://stackoverflow.com/questions/18499497/how-to-process-sigterm-signal-gracefully
@@ -73,8 +73,11 @@ def main():
 		sd.putBoolean("vision_shutdown", False)
 	
 	
+	processing_module = importlib.import_module("processors." + c.PROCESSOR)
+	processor = processing_module.Processor()
+	
+	
 	cs.control_led(cs.led_preset.solid)
-	processor = ContourProcessor()
 	print("starting...")
 	
 	rval = True
