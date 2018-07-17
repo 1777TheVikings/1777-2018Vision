@@ -3,24 +3,20 @@ import networktables as nt
 from typing import NoReturn
 
 from constants import *
+import camera_settings as cs
 import vision_utils as vu
-import processing
-
-
-# Generate an MJPG stream that emulates an Axis Camera.
-STREAM = False
-
-# Annotate the stream with vision processing info
-ANNOTATE = True
+import processors.contour_processor
 
 
 def main() -> NoReturn:
-	cap = cv2.VideoCapture("../test_samples/test_video.mp4")
+	cap = cv2.VideoCapture("test_videos/test_video.mp4")
 	
 	rval, _ = cap.read()
 	if not rval: raise RuntimeError("rval test failed")
 	
 	rval = True
+	cs.load_settings(SETTINGS_FILE)
+	processor = processors.contour_processor.Processor()
 	
 	print("starting...")
 	
@@ -28,9 +24,11 @@ def main() -> NoReturn:
 		while rval:
 			vu.start_time('reading')
 			rval, frame = cap.read()
+			if not rval:
+				break
 			frame = cv2.resize(frame, (0, 0), fx=0.33, fy=0.33)
 			vu.end_time('reading')
-			data, processed_frame = processing.process(frame, ANNOTATE)
+			data, processed_frame = processor.process(frame, annotate=True)
 			# if data != []:
 			# 	print data[0].angle
 			cv2.imshow('k', processed_frame)
