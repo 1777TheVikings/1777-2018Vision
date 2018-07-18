@@ -12,6 +12,7 @@ STOP_STREAMS = False
 
 
 class MJPGServer(BaseHTTPRequestHandler):
+    # noinspection PyPep8Naming
     def do_GET(self):
         if self.path == "/mjpg":
             self.send_response(200)

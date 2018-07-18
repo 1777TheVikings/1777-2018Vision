@@ -24,8 +24,8 @@ def main() -> NoReturn:
     
     cap = open_camera()
     
-    server = calibration_server.CalibrationServer()
-    server.start()
+    # server = calibration_server.CalibrationServer()
+    # server.start()
     
     rval = True
     
@@ -47,7 +47,7 @@ def main() -> NoReturn:
     except KeyboardInterrupt:
         print("wrapping up!")
     finally:
-        server.stop()
+        # server.stop()
         cap.release()
 
 
