@@ -2,9 +2,13 @@ import cv2
 import time
 import signal
 import importlib
-from queue import Queue, Full
+# from queue import Queue, Full
 from networktables import NetworkTables
 from typing import NoReturn
+# from multiprocessing import Process
+# from threading import Thread
+# from numpy import ndarray  # used for type hinting
+# from http.server import HTTPServer
 
 import constants as c
 import camera_settings as cs
@@ -14,11 +18,11 @@ import vision_utils as vu
 # found at https://stackoverflow.com/questions/18499497/how-to-process-sigterm-signal-gracefully
 class GracefulKiller:
     kill_now = False
-
+    
     def __init__(self):
         signal.signal(signal.SIGINT, self.exit_gracefully)
         signal.signal(signal.SIGTERM, self.exit_gracefully)
-
+    
     def exit_gracefully(self, *_) -> NoReturn:
         print("suicide is bad, mk?")
         self.kill_now = True
@@ -37,7 +41,7 @@ def open_camera() -> cv2.VideoCapture:
 
 def main() -> NoReturn:
     killer = GracefulKiller()
-
+    
     cs.control_led(cs.LEDPreset.SLOW_BLINK)
     # NetworkTables connections appear to be async, so
     # we should set this up first to minimize startup time.
@@ -45,10 +49,10 @@ def main() -> NoReturn:
         print("connecting to networktables")
         NetworkTables.initialize(server=c.NT_IP)
         sd = NetworkTables.getTable("SmartDashboard")
-
+    
     cap = open_camera()
     cs.load_settings(c.SETTINGS_FILE)
-
+    
     if c.RECORD:
         print("starting recording...")
         record = cv2.VideoWriter(vu.generate_filename(),
@@ -56,13 +60,16 @@ def main() -> NoReturn:
                                  c.CAMERA_FPS,
                                  (int(c.CAMERA_RESOLUTION[0]),
                                   int(c.CAMERA_RESOLUTION[1])))
-
-    if c.STREAM:
-        print("starting video stream...")
-        server_queue = Queue(maxsize=2)
-        server = vu.MJPGserver(server_queue)
-        server.start()
-
+    
+    # if c.STREAM:
+    #     print("starting video stream...")
+    #     server_queue = Queue(maxsize=2)
+    #     vu.set_frame_queue(server_queue)
+    #     server = HTTPServer(("0.0.0.0", 1190), vu.MJPGServer)
+    #     server_thread = Thread(target=server.serve_forever)
+    #     server_thread.daemon = True
+    #     server_thread.start()
+    
     if c.NT_OUTPUT:
         if not NetworkTables.isConnected():
             cs.control_led(cs.LEDPreset.FAST_BLINK)
@@ -74,20 +81,20 @@ def main() -> NoReturn:
         # noinspection PyUnboundLocalVariable
         sd.putBoolean("vision_angle", 999)  # this will never be legitimately returned
         sd.putBoolean("vision_shutdown", False)
-
+    
     processing_module = importlib.import_module("processors." + c.PROCESSOR)
     processor = processing_module.Processor()
-
+    
     cs.control_led(cs.LEDPreset.SOLID)
     print("starting...")
-
+    
     rval = True
-
+    
     try:
         while rval:
             if killer.kill_now:
                 raise KeyboardInterrupt
-
+            
             if c.RELOAD_CAMERA:
                 print("reloading camera...")
                 cap.release()
@@ -95,37 +102,45 @@ def main() -> NoReturn:
                 c.RELOAD_CAMERA = False
             rval, frame = cap.read()
             data, processed_frame = processor.process(frame, annotate=c.ANNOTATE)
-
+            
             if c.WINDOW:
                 cv2.imshow('k', processed_frame)
                 cv2.waitKey(1)
-
+            
             if c.NT_OUTPUT:
                 if len(data) > 0:
                     sd.putNumber('vision_angle', data[0].angle)
+                    NetworkTables.flush()  # makes NT update immediately
                 if sd.getBoolean("vision_shutdown", False):
                     raise KeyboardInterrupt
-
+            
             if c.RECORD:
                 # noinspection PyUnboundLocalVariable
                 record.write(processed_frame)
-
-            if c.STREAM:
-                try:
-                    # noinspection PyUnboundLocalVariable
-                    server_queue.put(cv2.imencode(".jpg", processed_frame)[1].tostring(), False)
-                except Full:
-                    pass
+            
+            # if c.STREAM:
+            #     # noinspection PyUnboundLocalVariable
+            #     Process(target=insert_into_server_queue, args=[server_queue, processed_frame]).start()
     except KeyboardInterrupt:
         print("wrapping up!")
     finally:
-        record.release()
+        if c.RECORD:
+            record.release()
         cap.release()
-        NetworkTables.shutdown()
-        if c.STREAM:
-            # noinspection PyUnboundLocalVariable
-            server.stop()
+        if c.NT_OUTPUT:
+            NetworkTables.shutdown()
+        # if c.STREAM:
+        #     # noinspection PyUnboundLocalVariable
+        #     # server_thread.something()?
+        #     pass
         cs.control_led(cs.LEDPreset.OFF)
+
+
+# def insert_into_server_queue(server_queue: Queue, frame: ndarray) -> NoReturn:
+#     try:
+#         server_queue.put(cv2.imencode(".jpg", frame)[1].tostring(), False)
+#     except Full:
+#         pass
 
 
 main()
