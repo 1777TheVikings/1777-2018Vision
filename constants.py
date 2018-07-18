@@ -1,7 +1,7 @@
 import os  # used for reading environment variables
 
 # Generate an MJPG stream that emulates an Axis Camera.
-STREAM = True
+STREAM = False
 
 # Record all videos.
 RECORD = True

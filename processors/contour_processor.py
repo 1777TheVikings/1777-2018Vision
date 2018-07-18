@@ -38,15 +38,13 @@ class Processor(ProcessorBase):
         dilated = cv2.dilate(eroded, None, (-1, -1), iterations=5, borderType=cv2.BORDER_CONSTANT,
                              borderValue=(-1))
         
-        contour_image, contours, hierarchy = cv2.findContours(dilated, mode=cv2.RETR_EXTERNAL,
-                                                              method=cv2.CHAIN_APPROX_SIMPLE)
+        contour_image, contours, _ = cv2.findContours(dilated, mode=cv2.RETR_EXTERNAL, method=cv2.CHAIN_APPROX_SIMPLE)
         
-        contours_hulls = []
-        for i in contours:
-            contours_hulls.append(cv2.convexHull(i))
+        contours_hulls = [cv2.convexHull(cnt) for cnt in contours]
+        contours_filtered = [cnt for cnt in contours_hulls if self.filter_contour(cnt)]
         
-        contours_filtered = self.filter_contours(contours_hulls)
-        data_out = vu.process_contours(contours_filtered)
+        data_out = [vu.ContourInfo(cnt) for cnt in contours_filtered]
+        data_out.sort(key=vu.get_nearness_to_center)
         
         if "annotate" in kwargs and kwargs["annotate"]:
             output_frame = frame
@@ -61,27 +59,22 @@ class Processor(ProcessorBase):
         
         return data_out, output_frame
     
-    """ Contour filtering stolen from GRIP output code.
-        
-        contours - Contours as a list of numpy.ndarray
-        
-        Returns all valid contours as a list of numpy.ndarray.
-    """
-    
     @staticmethod
-    def filter_contours(contours: List[ndarray]) -> List[ndarray]:
-        output = []
-        for contour in contours:
-            x, y, w, h = cv2.boundingRect(contour)
-            if w < int(c.VISION_SETTINGS['width'][0]) or w > int(c.VISION_SETTINGS['width'][1]):  # min/max width
-                continue
-            if h < int(c.VISION_SETTINGS['height'][0]) or h > int(c.VISION_SETTINGS['height'][1]):  # min/max height
-                continue
-            
-            area = cv2.contourArea(contour)
-            if area < int(c.VISION_SETTINGS['area'][0]) or area > int(c.VISION_SETTINGS['area'][1]):  # min/max area
-                continue
-            
-            output.append(contour)
+    def filter_contour(contour: ndarray) -> bool:
+        """ Contour filtering stolen from GRIP output code.
+
+                contours - Contour as a numpy.ndarray
+
+                Returns True if the contour is valid, False otherwise.
+        """
+        x, y, w, h = cv2.boundingRect(contour)
+        if w < int(c.VISION_SETTINGS['width'][0]) or w > int(c.VISION_SETTINGS['width'][1]):  # min/max width
+            return False
+        if h < int(c.VISION_SETTINGS['height'][0]) or h > int(c.VISION_SETTINGS['height'][1]):  # min/max height
+            return False
         
-        return output
+        area = cv2.contourArea(contour)
+        if area < int(c.VISION_SETTINGS['area'][0]) or area > int(c.VISION_SETTINGS['area'][1]):  # min/max area
+            return False
+        
+        return True
